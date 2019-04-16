@@ -72,11 +72,12 @@ class Elevator
 	
 	void addPassenger(Passenger p);
 	void checkForExit();
-	void checkForEnter();
+	void checkForEnter(int boardingtime);
 	void move();
 	
 	void updateDeepHight();
 	int getPathLength();
 	int getNStops();
+	Passenger getNextPassenger();
 	
 }; // end Elevator Class

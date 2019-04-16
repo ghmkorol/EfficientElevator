@@ -41,6 +41,7 @@ int main(int argc, char *argv[])
     int eSize = 0; //number of elevators
     queue<Passenger> pickUpQueue;
     vector<Elevator> elist; // create a vector to hold elevators
+    int requestNr = 1;
   
   //start read data from file
     ifstream inFile;
@@ -78,7 +79,7 @@ int main(int argc, char *argv[])
       }
       else if(lineNumber>2){
 	for(int i=1;i<(int)v.size();i++){
-	 Passenger p(v.at(0),v.at(i));
+	 Passenger p(v.at(0),v.at(i),requestNr++);
 	 pickUpQueue.push(p);
 	}
       }
@@ -86,21 +87,21 @@ int main(int argc, char *argv[])
     }
     inFile.close();
     //stop read data from file
-/////////////////////////////////////////////////////////////////////////////////////////////    
-    
+      
     
     int time=0;
     while(true)
     {
       bool isBreak=1;
       if((int)pickUpQueue.size()>0)isBreak=0;
-//       for(int i=0;i<eSize;i++){
-// 	if(elist.at(i).getSize()>0)isBreak=0;
-//       }
+      for(int i=0;i<eSize;i++){
+	if(elist.at(i).getSize()>0)isBreak=0;
+      }
       if(isBreak)break;
       
      
      //....................start assign passangers to the elevators ....................
+      //myprint//printf("\nstart assign passangers to the elevators: (size of pick up queue: %d)\n",(int)pickUpQueue.size());
      for(int i=0;i<eSize;i++){
         if((int)pickUpQueue.size()==0) break; 
 	Passenger p = pickUpQueue.front();
@@ -112,7 +113,6 @@ int main(int argc, char *argv[])
 	int minNStops=999;
 	for(int j=0;j<eSize;j++){
 	 Elevator temp_e = elist.at(j);
-	 //temp_e.addPassenger(p);
 	 int ePath=temp_e.getPathLength();
 	 int eNstops=temp_e.getNStops();
 	 if(minPath>ePath){
@@ -126,22 +126,45 @@ int main(int argc, char *argv[])
 	  }
          }
 	 elist.at(elevatorIndex).addPassenger(p);
-	
       } 
+      
+      for(int i=0;i<eSize;i++){
+	//myprint//printf("elevator id %d, floor %d, time %d, Npeople %d ",i,elist.at(i).getFloor(),time,elist.at(i).getSize());
+	//myprint//printf("from %d,to %d\n",elist.at(i).getNextPassenger().getPickUpFloor(),elist.at(i).getNextPassenger().getDestination());
+	(elist.at(i)).checkForExit();
+	(elist.at(i)).checkForEnter(time);
+	(elist.at(i)).move();
+      }
+      time++;
+      ///printf("..................\n");
+      for(int i=0;i<eSize;i++){
+	(elist.at(i)).checkForExit();
+	(elist.at(i)).checkForEnter(time);
+	//myprint//printf("elevator id %d, floor %d, time %d, Npeople %d ",i,elist.at(i).getFloor(),time,elist.at(i).getSize());
+	//myprint//printf("from %d,to %d\n",elist.at(i).getNextPassenger().getPickUpFloor(),elist.at(i).getNextPassenger().getDestination());
+      }
+      //myprint//printf("end assign passangers to the elevators: (size of pick up queue: %d)\n",(int)pickUpQueue.size());
       //............................end assign passangers to the elevators......................
       
       
-      
+/*      
       for(int i=0;i<eSize;i++){
-	cout << i <<" passangers in the elevator: " << elist.at(i).getSize() << endl;
+	if(i!=0)continue;
+	printf("a) elevator id %d, floor %d, time %d, Npeople %d checkForEnter->>\n",i,elist.at(i).getFloor(),time,elist.at(i).getSize());
+	(elist.at(i)).checkForEnter(time);
+	printf("from %d,to %d\n",elist.at(i).getNextPassenger().getPickUpFloor(),elist.at(i).getNextPassenger().getDestination());
+	printf("b) elevator id %d, floor %d, time %d, Npeople %d move->> \n",i,elist.at(i).getFloor(),time,elist.at(i).getSize());
+	(elist.at(i)).move();
+	printf("c) elevator id %d, floor %d, time %d, Npeople %d chekForExit->> \n",i,elist.at(i).getFloor(),time,elist.at(i).getSize());
+	
+	(elist.at(i)).checkForExit();
+	printf("d) elevator id %d, floor %d, time %d, Npeople  %d\n\n",i,elist.at(i).getFloor(),time,elist.at(i).getSize());
+	
       }
+      cout<< endl;*/
       
       
-      time++;
-	
-      //............................start move the elevators................................
-      //............................start move the elevators................................
-	
+      
       
     }
     

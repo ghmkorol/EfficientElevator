@@ -26,18 +26,20 @@ private:
   
    int from;
    int to;
+   int elevator;
    int startTime;
    int boardingTime;
    int endTime;
    bool isOnBoard_;
    int ID;//id in the elevator
    int shifts;
+   int requestNr;
   
 public:
       
 
    Passenger();
-   Passenger(int f, int t);
+   Passenger(int f, int t,int req);
    //Board time
    //floortime
    
@@ -50,10 +52,12 @@ public:
    int getCurrentGoal() const;
    int getShifts() const;
    void setStartTime(const int starttime);
+   void setElevator(const int e);
    int getID() const;
    void setID(const int id);
    void takeOnBoard(const int boardingtime);
    bool isOnBoard() const;
+   void PrintSummary();
 
 }; // end class Passenger
 

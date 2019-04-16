@@ -10,8 +10,11 @@
  */
 
 #include <vector> // for vector from STL
+#include <iostream>
 
 using std::vector;
+using std::cout;
+using std::endl;
 
 #include "Elevator.h" // Elevator Object class
 #include "Passenger.h" // Passenger Object class
@@ -136,13 +139,65 @@ void Elevator::addPassenger(Passenger p)
   passengers.push_back(p);
   updateDeepHight();
   Ele_pq.push(p);
+  updateDeepHight();
 }
+
+void Elevator::checkForEnter(int boardingtime)
+{
+  updateDeepHight();
+  while(Ele_pq.top().isOnBoard()==0&&Ele_pq.top().getPickUpFloor()==floor){
+    Passenger p = Ele_pq.top();
+    p.takeOnBoard(boardingtime);
+    updateDeepHight();
+    Ele_pq.pop();
+    updateDeepHight();
+    Ele_pq.push(p);
+    updateDeepHight();
+  }
+  
+  for(int i=0;i<(int)passengers.size();i++){
+      Passenger p = passengers.at(i);
+      if(p.isOnBoard())continue;
+      if(floor==p.getPickUpFloor()){
+	p.takeOnBoard(boardingtime);
+	updateDeepHight();
+      }
+    }
+}
+
+void Elevator::move()
+{
+  if(Ele_pq.size()>0){
+    updateDeepHight();
+    Passenger p = Ele_pq.top();
+    floor=p.getCurrentGoal();
+  }
+}
+
 
 void Elevator::checkForExit()
 {
-    for(int i=0;i<(int)passengers.size();i++){
-    Passenger p = passengers.at(i);
-    }
+  
+  updateDeepHight();
+  while(Ele_pq.top().isOnBoard()==1&&Ele_pq.top().getDestination()==floor&&Ele_pq.size()>0){
+    Passenger p = Ele_pq.top();
+    updateDeepHight();
+    Ele_pq.pop();
+    updateDeepHight();
+    //////////////////////////////////////////////
+    p.PrintSummary();
+    
+    int id = p.getID();
+      int pos=-1;
+      for(int i=0;i<(int)passengers.size();i++){
+	if(id==passengers.at(i).getID()){
+	  pos=i;
+	}
+      }      
+      passengers.erase(passengers.begin() + pos);
+      updateDeepHight();
+  }
+      
 }
 
 
@@ -187,6 +242,7 @@ int Elevator::getPathLength()
   int f=floor;
   CustomPQ temp_pq=Ele_pq;
   while(!temp_pq.empty()) {
+    updateDeepHight();
     Passenger p = temp_pq.top();
     if(p.isOnBoard()){
       distance+=abs(f-p.getCurrentGoal());
@@ -203,5 +259,10 @@ int Elevator::getPathLength()
   }
   
   return distance;
+}
+
+Passenger Elevator::getNextPassenger()
+{
+    return Ele_pq.top();
 }
 

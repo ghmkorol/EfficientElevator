@@ -16,18 +16,21 @@
 #include <memory>
 #include <functional>
 #include <algorithm>
+#include <iostream>
 
 #include "Passenger.h"
 
 using std::shared_ptr;
 using std::make_shared;
+using std::cout;
+using std::endl;
 
-Passenger::Passenger():from(-1),to(-1),startTime(-1),boardingTime(-1),endTime(-1),isOnBoard_(0),ID(-1),shifts(0)
+Passenger::Passenger():from(-1),to(-1),elevator(0),startTime(-1),boardingTime(-1),endTime(-1),isOnBoard_(0),ID(-1),shifts(0),requestNr(0)
 {
   
 }
 
-Passenger::Passenger(int f,int t):from(f),to(t),startTime(-1),boardingTime(-1),endTime(-1),isOnBoard_(0),ID(-1),shifts(0)
+Passenger::Passenger(int f,int t,int req):from(f),to(t),elevator(0),startTime(-1),boardingTime(-1),endTime(-1),isOnBoard_(0),ID(-1),shifts(0),requestNr(req)
 {
   
 }
@@ -80,6 +83,12 @@ void Passenger::takeOnBoard(const int boardingtime)
 {
   isOnBoard_=true;
   boardingTime=boardingtime;
+}
+
+void Passenger::PrintSummary()
+{
+  printf("Request # %d, from %d to %d, elevator %d\n",requestNr,from,to,elevator);
+  
 }
 
 
